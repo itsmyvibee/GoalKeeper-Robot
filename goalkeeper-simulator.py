@@ -3,7 +3,9 @@ import shelvE
 import time
 import win32api as win32
 import win32con
+import os
 from PIL import ImageGrab
+import ast
 
 tutorial = """CALIBRAGEM DE TRAVE\n
         1. Marque a opção "Ball" antes de começar\n
@@ -15,7 +17,6 @@ tutorial = """CALIBRAGEM DE TRAVE\n
 
 tutorial_verificacao = True
 contPrints = 0
-tutorial_print = True
 
 class App(object):
     def __init__(self):
@@ -60,7 +61,7 @@ class App(object):
         self.frame4 = Frame(self.root)
         self.frame4.pack(side='top', padx=5, pady=10)
         self.frame5 = Frame(self.root)
-        self.frame5.pack(side='top', pady=10)
+        self.frame5.pack(side='top', pady=5)
 
         #Canvas
         self.canvas = Canvas(self.frameGoleiro, bg='grey', height=self.heightCanvas, width=self.widthCanvas)
@@ -114,7 +115,7 @@ class App(object):
         self.botaoOpenSoftware.pack(side='left', padx=10)
             #Botão PauseOnGoal
         self.pausarNoGolLigado = False
-        self.botaoPauseOnGoal = Button(self.frame4, text='Printscreen: Off', bg='#d32c2c', command=self.mudarPauseOnGoal)
+        self.botaoPauseOnGoal = Button(self.frame4, text='Printscreen: Off', bg='#d32c2c', command=self.printScreenOnGoal)
         self.botaoPauseOnGoal.pack()
 
             #Campo para caminho printscreen
@@ -176,32 +177,34 @@ class App(object):
 
     def calibrarCorBola(self):
         """ Vai abrir o range-detector.py para poder calibrar a cor da bola
-        Necessario o range-detector.bat com os comandos cd 'Local' e py range-detector -f HSV -w"""
+        o script precisa estar no mesmo diretorio deste programa """
 
-        win32.WinExec('range-detector.bat', win32con.SW_HIDE)
+        path = os.path.abspath("") + '\\range-detector.py'
+        os.system(f'py {path} -f HSV -w')
+
 
     def abrirSoftwareReconhecimento(self):
-        """ Vai abrir o software do opencv do goleiro goleiro.bat"""
+        """ Vai abrir o software com o 'os', o script precisa estar no mesmo diretorio deste programa ... (goalkeeper.py) """
 
-        win32.WinExec('goleiro.bat', win32con.SW_HIDE)
+        #path = os.path.abspath("") + '\\goalkeeper.py'
+        #os.system(f'py {path}')
+        win32.WinExec('goalkeeper.bat', win32con.SW_HIDE)
 
-    def mudarPauseOnGoal(self):
-        global tutorial_print
-        if tutorial_print:
-            tutorial_print = not tutorial_print
-            win32.MessageBeep(1)
-            win32.MessageBox(0, 'Coloque o caminho que os prints serão enviados no campo abaixo.', 'Tutorial Print')
-
+    def printScreenOnGoal(self):
+        self.pausarNoGolLigado = not self.pausarNoGolLigado
+        if self.pausarNoGolLigado:
+            import time
+            folderName = time.localtime()
+            save_path = os.path.abspath("")
+            os.system(f'mkdir {save_path}\\Screenshots\\{str(folderName[3])}-{str(folderName[4])}-{str(folderName[5])}')
+            self.pathScreenshot = save_path + f'\\Screenshots\\{str(folderName[3])}-{str(folderName[4])}-{str(folderName[5])}'
+            print('Pause on Goal Ligado')
+            self.botaoPauseOnGoal['bg'] = '#72d119'
+            self.botaoPauseOnGoal['text'] = 'Printscreen: On'
         else:
-            self.pausarNoGolLigado = not self.pausarNoGolLigado
-            if self.pausarNoGolLigado:
-                print('Pause on Goal Ligado')
-                self.botaoPauseOnGoal['bg'] = '#72d119'
-                self.botaoPauseOnGoal['text'] = 'Printscreen: On'
-            else:
-                print('Pause on Goal Desligado')
-                self.botaoPauseOnGoal['bg'] = '#d32c2c'
-                self.botaoPauseOnGoal['text'] = 'Printscreen: Off'
+            print('Pause on Goal Desligado')
+            self.botaoPauseOnGoal['bg'] = '#d32c2c'
+            self.botaoPauseOnGoal['text'] = 'Printscreen: Off'
 
     def calibrar(self):
         ''' Vai receber os valores dos campos de calibração e calibrar as traves '''
@@ -270,7 +273,7 @@ class App(object):
             self.root.after(10, self.aplicar)
 
     def desenhar(self):
-        """ Função que redesenha os itens com novas posições e novos dados """
+        """ Função que redesenha os itens com novas posições e novos dados, Aqui tmb será tirado o printscreen caso ativado """
 
         self.canvas.itemconfig('goleiro', start=-(170 + (self.angulo + 1)), extent=-20)
         self.canvas.itemconfig('textoangulo', text='Goleiro: {}º'.format(self.angulo))
@@ -292,19 +295,21 @@ class App(object):
                                                                  self.ybola + self.tamanhoBola, fill='green',
                                                                  tag='bola')
                     print('Defender: {}'.format(self.angulo))
+
                     if self.pausarNoGolLigado and self.yReal > -10:
                         win32.MessageBeep(1)
                         img = ImageGrab.grab()
                         #img.show()
                         try:
-                            save_path = str(self.caminhoPrintScreen.get())
-                            img.save("{}\\goalPhoto{}.jpg".format(save_path, contPrints))
+                            #Getting path of the program
+                            img.save("{}\\goalPhoto{}.jpg".format(self.pathScreenshot, contPrints))
                             contPrints += 1
+
                         except:
                             win32.MessageBox(0, 'Caminho inválido', 'Erro Print')
                             self.comecar()
 
-                        time.sleep(3)
+                        time.sleep(0.3)
 
                 else:
                     self.bolaSimulacao = self.canvas.create_oval(self.xbola - self.tamanhoBola,
@@ -313,7 +318,6 @@ class App(object):
                                                                  self.ybola + self.tamanhoBola, fill=self.corBola,
                                                                  tag='bola')
             except:
-                print('Evitei o erro')
                 pass
 
     def validarRaio(self):

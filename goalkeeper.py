@@ -30,8 +30,8 @@ except:
     text = 'É necessaria calibrar as cores antes, inicie o simulador e faça a configuração (Cor Bola).'
     win32.MessageBeep(1)
     win32.MessageBox(0, text, 'Erro')
-    #tuplaMin = (47, 63, 96) #TODO COMENTAR ESSAS LINHAS PARA COR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    #tuplaMax = (98, 255, 255)
+    tuplaMin = (47, 63, 96) #TODO COMENTAR ESSAS LINHAS PARA COR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    tuplaMax = (98, 255, 255)
 
 
 def sendArduino(raio, angulo):
@@ -82,7 +82,7 @@ def sendArduino(raio, angulo):
             banco['x'] = '{:.0f}'.format(x)
             banco['y'] = '{:.0f}'.format(y)
             banco['raio'] = '{:.0f}'.format(raio)
-            #sleep(0.1)
+            sleep(0.05)
             banco.close()
         except:
             #print('Evitei erro do banco de dados')
