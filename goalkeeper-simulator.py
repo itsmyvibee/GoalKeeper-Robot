@@ -5,7 +5,7 @@ import win32api as win32
 import win32con
 import os
 from PIL import ImageGrab
-import ast
+
 
 tutorial = """CALIBRAGEM DE TRAVE\n
         1. Marque a opção "Ball" antes de começar\n
@@ -60,8 +60,6 @@ class App(object):
         self.frame3.pack(side='top')
         self.frame4 = Frame(self.root)
         self.frame4.pack(side='top', padx=5, pady=10)
-        self.frame5 = Frame(self.root)
-        self.frame5.pack(side='top', pady=5)
 
         #Canvas
         self.canvas = Canvas(self.frameGoleiro, bg='grey', height=self.heightCanvas, width=self.widthCanvas)
@@ -117,12 +115,6 @@ class App(object):
         self.pausarNoGolLigado = False
         self.botaoPauseOnGoal = Button(self.frame4, text='Printscreen: Off', bg='#d32c2c', command=self.printScreenOnGoal)
         self.botaoPauseOnGoal.pack()
-
-            #Campo para caminho printscreen
-        self.textPrint = Label(self.frame5, text='Save Print Path: ')
-        self.textPrint.pack(side='left')
-        self.caminhoPrintScreen = Entry(self.frame5, width=50)
-        self.caminhoPrintScreen.pack(side='left')
 
 
         #Inicio do simulador
@@ -357,7 +349,7 @@ class App(object):
                 self.y = int(self.y)
                 self.raio = int(self.raio)
             else:
-                print('Refazendo update')
+                #print('Refazendo update')
                 self.update()
         except:
             pass
@@ -366,7 +358,7 @@ class App(object):
             try:
                 banco.close()
             except:
-                print('Evitando erro nao fechamento do banco')
+                #print('Evitando erro nao fechamento do banco')
                 pass
 
     def sendSerial(self):
