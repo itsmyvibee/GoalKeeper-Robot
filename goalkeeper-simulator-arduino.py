@@ -1,5 +1,5 @@
 from tkinter import *
-import shelvE
+import shelve
 import time
 import win32api as win32
 import win32con
@@ -348,7 +348,7 @@ class App(object):
         """ Função que irá atualizar os dados para poder passar para a parte do redesenho, recebe os dados do banco shelve e passa para as outras funções """
 
         try:
-            banco = shelvE.open('dados.db')
+            banco = shelve.open('dados.db')
             #Angulo Refined
             self.angulo = int(banco.get('angulo'))
             cinco = int(self.angulo / 5) #Devolve os angulos de 5 em cinco
