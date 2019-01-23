@@ -12,7 +12,7 @@ import cv2
 import threading
 import serial
 import struct
-import shelvE
+import shelve
 import win32api as win32
 
 achou_o_final = False
@@ -21,7 +21,7 @@ saved = 0
 contador = 0
 
 try:
-    db = shelvE.open('dados.db')
+    db = shelve.open('dados.db')
     tuplaMax = (int(db.get('h_max')), int(db.get('s_max')), int(db.get('v_max')))
     tuplaMin = (int(db.get('h_min')), int(db.get('s_min')), int(db.get('v_min')))
     db.close()
@@ -30,8 +30,8 @@ except:
     text = 'É necessaria calibrar as cores antes, inicie o simulador e faça a configuração (Cor Bola).'
     win32.MessageBeep(1)
     win32.MessageBox(0, text, 'Erro')
-    tuplaMin = (47, 63, 96) #TODO COMENTAR ESSAS LINHAS PARA COR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    tuplaMax = (98, 255, 255)
+    tuplaMin = (0, 142, 79) #TODO COMENTAR ESSAS LINHAS PARA COR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    tuplaMax = (42, 255, 255)
 
 
 def sendArduino(raio, angulo):
@@ -75,7 +75,7 @@ def sendArduino(raio, angulo):
         #print('Pos: {}   <<<<'.format(pos))
 
         try:
-            banco = shelvE.open('dados.db')
+            banco = shelve.open('dados.db')
             banco['angulo'] = anguloRobo
             banco['xreal'] = '{:.0f}'.format(xReal)
             banco['yreal'] = '{:.0f}'.format(yReal)

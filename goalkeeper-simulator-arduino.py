@@ -42,8 +42,8 @@ class App(object):
         self.raioDefesa = 60
 
         #TAMANHO DO SIMULADOR <<<<<<<<<<<<<<<<<<<<<<<<<<<   #PADRAO 200x200
-        self.heightCanvas = 600
-        self.widthCanvas = 600
+        self.heightCanvas = 300
+        self.widthCanvas = 300
         self.tamanhoBola = (5*self.heightCanvas) / 200
 
         #IMPORTANTE <<<<< É O TAMANHO DA TRAVE NA WEBCAM (600x450 PEGA A WEBCAM TODA COMO REFERENCIA)
@@ -398,7 +398,7 @@ class App(object):
         self.serialLigada = not self.serialLigada
         if self.serialLigada:
             print('Serial Ligada')
-            self.data = serial.Serial('com4', 9600, timeout=1)
+            self.data = serial.Serial('com7', 9600, timeout=1)
         else:
             print('Serial desativada')
         pass

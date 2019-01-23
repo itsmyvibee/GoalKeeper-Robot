@@ -10,8 +10,8 @@
 import cv2
 import argparse
 from operator import xor
-import shelvE
-import win32api as win32
+import shelve
+#import win32api as win32
 
 def callback(value):
     pass
@@ -102,7 +102,7 @@ def main():
 
         if cv2.waitKey(1) & 0xFF is ord('q'):
             #Salvar os dados no banco
-            db = shelvE.open('dados.db')
+            db = shelve.open('dados.db')
             db['h_min'] = v1_min
             db['h_max'] = v1_max
             db['s_min'] = v2_min
@@ -112,8 +112,8 @@ def main():
             cores = ('Valores salvos\nH: {}~{}   S: {}~{}   V: {}~{}'.format(v1_min, v1_max, v2_min,
                                                                                                 v2_max, v3_min, v3_max))
 
-            win32.MessageBeep(1)
-            win32.MessageBox(0, cores, 'HSV Recebido')
+            #win32.MessageBeep(1)
+            #win32.MessageBox(0, cores, 'HSV Recebido')
             db.close()
 
             break
